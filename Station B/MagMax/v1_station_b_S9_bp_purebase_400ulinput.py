@@ -77,7 +77,6 @@ def run(ctx):
     res1 = ctx.load_labware(
         'nest_12_reservoir_15ml', '5', 'reagent reservoir 1')
     wash1 = res1.wells()[:4]
-    wash2 = res1.wells()[4:8]
     elution_solution = res1.wells()[-1]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -297,7 +296,6 @@ for 2 minutes')
     # remove initial supernatant
     remove_supernatant(1000, park=PARK)
     wash(500, wash1, 15, park=PARK)
-    wash(500, wash2, 15, park=PARK)
     wash(500, etoh, 15, park=PARK)
     wash(500, etoh, 15, park=PARK)
 
