@@ -12,7 +12,7 @@ metadata = {
 }
 
 NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
-STARTING_VOL = 410
+STARTING_VOL = 1000
 ELUTION_VOL = 50
 TIP_TRACK = False
 PARK = True
@@ -294,7 +294,11 @@ for 2 minutes')
             m300.air_gap(20)
             m300.drop_tip()
 
-    bind(550, park=PARK)
+    magdeck.engage(height=magheight)
+    ctx.delay(minutes=2, msg='Incubating on MagDeck for 2 minutes.')
+
+    # remove initial supernatant
+    remove_supernatant(1000, park=PARK)
     wash(500, wash1, 15, park=PARK)
     wash(500, wash2, 15, park=PARK)
     wash(500, etoh1, 15, park=PARK)
