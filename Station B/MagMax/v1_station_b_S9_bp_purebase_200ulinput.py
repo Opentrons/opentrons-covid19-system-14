@@ -6,14 +6,14 @@ import threading
 from time import sleep
 
 metadata = {
-    'protocolName': 'Version 1 S9 Station B BP Purebase (400µl sample input)',
+    'protocolName': 'Version 1 S9 Station B BP Purebase (200µl sample input)',
     'author': 'Nick <ndiehl@opentrons.com',
     'apiLevel': '2.3'
 }
 
 NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
-STARTING_VOL = 1000
 ELUTION_VOL = 50
+STARTING_VOL = 500
 TIP_TRACK = False
 PARK = True
 
@@ -190,39 +190,39 @@ resuming.')
             drop(m300)
         m300.flow_rate.aspirate = 150
 
-    def bind(vol, park=True):
-        # add bead binding buffer and mix samples
-        for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            source = binding_buffer[i//(12//len(binding_buffer))]
-            if park:
-                pick_up(m300, spot)
-            else:
-                pick_up(m300)
-            for _ in range(5):
-                m300.aspirate(180, source.bottom(0.5))
-                m300.dispense(180, source.bottom(5))
-            num_trans = math.ceil(vol/210)
-            vol_per_trans = vol/num_trans
-            for t in range(num_trans):
-                if m300.current_volume > 0:
-                    m300.dispense(m300.current_volume, source.top())  # void air gap if necessary
-                m300.transfer(vol_per_trans, source, well.top(), air_gap=20,
-                              new_tip='never')
-                if t == 0:
-                    m300.air_gap(20)
-            m300.mix(5, 200, well)
-            m300.blow_out(well.top(-2))
-            m300.air_gap(20)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                drop(m300)
-
-        magdeck.engage(height=magheight)
-        ctx.delay(minutes=2, msg='Incubating on MagDeck for 2 minutes.')
-
-        # remove initial supernatant
-        remove_supernatant(vol+STARTING_VOL, park=park)
+    # def bind(vol, park=True):
+    #     # add bead binding buffer and mix samples
+    #     for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
+    #         source = binding_buffer[i//(12//len(binding_buffer))]
+    #         if park:
+    #             pick_up(m300, spot)
+    #         else:
+    #             pick_up(m300)
+    #         for _ in range(5):
+    #             m300.aspirate(180, source.bottom(0.5))
+    #             m300.dispense(180, source.bottom(5))
+    #         num_trans = math.ceil(vol/210)
+    #         vol_per_trans = vol/num_trans
+    #         for t in range(num_trans):
+    #             if m300.current_volume > 0:
+    #                 m300.dispense(m300.current_volume, source.top())  # void air gap if necessary
+    #             m300.transfer(vol_per_trans, source, well.top(), air_gap=20,
+    #                           new_tip='never')
+    #             if t == 0:
+    #                 m300.air_gap(20)
+    #         m300.mix(5, 200, well)
+    #         m300.blow_out(well.top(-2))
+    #         m300.air_gap(20)
+    #         if park:
+    #             m300.drop_tip(spot)
+    #         else:
+    #             drop(m300)
+    #
+    #     magdeck.engage(height=magheight)
+    #     ctx.delay(minutes=2, msg='Incubating on MagDeck for 2 minutes.')
+    #
+    #     # remove initial supernatant
+    #     remove_supernatant(vol+STARTING_VOL, park=park)
 
     def wash(wash_vol, source, mix_reps, park=True):
         magdeck.disengage()
@@ -294,7 +294,7 @@ for 2 minutes')
     ctx.delay(minutes=2, msg='Incubating on MagDeck for 2 minutes.')
 
     # remove initial supernatant
-    remove_supernatant(1000, park=PARK)
+    remove_supernatant(500, park=PARK)
     wash(500, wash1, 15, park=PARK)
     wash(500, etoh, 15, park=PARK)
     wash(500, etoh, 15, park=PARK)
