@@ -65,23 +65,20 @@ def run(ctx):
     magdeck = ctx.load_module('magdeck', '4')
     magdeck.disengage()
     magheight = 13.7
-    magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep')
-    # magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    # magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep')
+    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
     waste = ctx.load_labware('nest_1_reservoir_195ml', '11',
                              'Liquid Waste').wells()[0].top()
-    res2 = ctx.load_labware(
-        'nest_12_reservoir_15ml', '2', 'reagent reservoir 2')
+    etoh = ctx.load_labware(
+        'nest_1_reservoir_195ml', '2', 'EtOH reservoir').wells()[0:]
     res1 = ctx.load_labware(
         'nest_12_reservoir_15ml', '5', 'reagent reservoir 1')
-    binding_buffer = res1.wells()[:4]
-    wash1 = res1.wells()[4:8]
-    wash2 = res1.wells()[8:]
-    etoh1 = res2.wells()[:4]
-    etoh2 = res2.wells()[4:8]
-    elution_solution = res2.wells()[-1]
+    wash1 = res1.wells()[:4]
+    wash2 = res1.wells()[4:8]
+    elution_solution = res1.wells()[-1]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = flatplate.rows()[0][:num_cols]
@@ -301,8 +298,8 @@ for 2 minutes')
     remove_supernatant(1000, park=PARK)
     wash(500, wash1, 15, park=PARK)
     wash(500, wash2, 15, park=PARK)
-    wash(500, etoh1, 15, park=PARK)
-    wash(500, etoh2, 15, park=PARK)
+    wash(500, etoh, 15, park=PARK)
+    wash(500, etoh, 15, park=PARK)
 
     magdeck.disengage()
     ctx.delay(minutes=5, msg='Airdrying beads at room temperature for 5 \
