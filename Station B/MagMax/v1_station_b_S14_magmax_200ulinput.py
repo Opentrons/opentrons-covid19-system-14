@@ -148,12 +148,14 @@ resuming.')
             # thread.join()
             drop_count = 0
 
+    waste_vol = 0
+    waste_threshold = 185000
+
     def remove_supernatant(vol, park=False):
-        waste_vol = 0
-        waste_threshold = 185000
 
         def waste_track(vol):
             nonlocal waste_vol
+            print(waste_vol)
             if waste_vol + vol >= waste_threshold:
                 # Setup for flashing lights notification to empty liquid waste
                 # if not ctx._hw_manager.hardware.is_simulator:

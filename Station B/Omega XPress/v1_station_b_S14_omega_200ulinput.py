@@ -149,10 +149,10 @@ resuming.')
             # thread.join()
             drop_count = 0
 
-    def remove_supernatant(vol, park=False):
-        waste_vol = 0
-        waste_threshold = 185000
+    waste_vol = 0
+    waste_threshold = 185000
 
+    def remove_supernatant(vol, park=False):
         def waste_track(vol):
             nonlocal waste_vol
             if waste_vol + vol >= waste_threshold:
