@@ -77,7 +77,7 @@ def run(ctx):
     res1 = ctx.load_labware(
         'nest_12_reservoir_15ml', '5', 'reagent reservoir 1')
     binding_buffer = res1.wells()[:2]
-    wash1 = res1.wells()[2:5]
+    wash1 = res1.wells()[3:6]
     elution_solution = res1.wells()[-1]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
